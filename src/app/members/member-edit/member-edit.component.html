@@ -1,0 +1,128 @@
+@if (member) {
+<div class="min-vh-90 d-flex flex-column" style="overflow: hidden">
+  <!-- Top Section -->
+  <div class="container-fluid flex-grow-1 d-flex">
+    <div class="row flex-grow-1 w-100 g-0">
+      <!-- Left: Profile Section -->
+      <div
+        class="col-md-4 bg-primary text-white d-flex flex-column align-items-center justify-content-center p-5"
+      >
+        @if(member.photoUrl){
+        <img
+          [src]="member.photoUrl"
+          class="img-fluid rounded-circle shadow border border-3 border-white mb-4"
+          alt="{{ member.knownAs }}"
+          style="width: 200px; height: 200px"
+        />
+        } @else {
+        <img
+          src="https://static.vecteezy.com/system/resources/previews/005/544/753/non_2x/profile-icon-design-free-vector.jpg"
+          class="img-fluid rounded-circle shadow border border-3 border-white mb-4"
+          alt="{{ member.knownAs }}"
+          style="width: 200px; height: 200px"
+        />
+        }
+        <h2 class="fw-bold">{{ member.knownAs }}</h2>
+        <p><i class="bi bi-person-circle me-1"></i> Age: {{ member.age }}</p>
+        <p>
+          <i
+            class="bi bi-gender-{{
+              member.gender === 'female' ? 'female' : 'male'
+            }} me-1"
+          ></i>
+          {{ member.gender }}
+        </p>
+        <div class="mt-4 text-white-50 small text-center">
+          <p><strong>Created:</strong> {{ member.created }}</p>
+          <p><strong>Last Active:</strong> {{ member.lastActive }}</p>
+        </div>
+      </div>
+
+      <!-- Right: Tabs and Info -->
+      <div class="col-md-8 d-flex flex-column p-5">
+        @if (editForm.dirty) {
+        <div class="alert alert-info pb-0">
+          <p>
+            <strong>Information:</strong>
+            You have made changes.Any unsavesd changes will lost
+          </p>
+        </div>
+        }
+        <form #editForm="ngForm" (ngSubmit)="updateMember()">
+          <tabset class="member-tabset">
+            <tab heading="About {{ member.userName }}">
+              <div class="mb-4">
+                <label class="form-label fw-semibold">Description</label>
+                <textarea
+                  class="form-control"
+                  name="introduction"
+                  [(ngModel)]="member.introduction"
+                  rows="4"
+                ></textarea>
+              </div>
+
+              <div class="mb-4">
+                <label class="form-label fw-semibold">Looking For</label>
+                <textarea
+                  class="form-control"
+                  name="lookingFor"
+                  [(ngModel)]="member.lookingFor"
+                  rows="4"
+                ></textarea>
+              </div>
+
+              <div class="mb-4">
+                <label class="form-label fw-semibold">Interests</label>
+                <textarea
+                  class="form-control"
+                  name="interests"
+                  [(ngModel)]="member.interests"
+                  rows="4"
+                ></textarea>
+              </div>
+
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">City</label>
+                  <input
+                    class="form-control"
+                    [(ngModel)]="member.city"
+                    name="city"
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Country</label>
+                  <input
+                    class="form-control"
+                    [(ngModel)]="member.country"
+                    name="country"
+                  />
+                </div>
+              </div>
+
+              <div class="mt-4 d-flex justify-content-end">
+                <button
+                  [disabled]="!editForm.dirty"
+                  type="submit"
+                  class="btn btn-success px-4"
+                >
+                  <i class="bi bi-save me-2"></i> Save Changes
+                </button>
+              </div>
+            </tab>
+
+            <tab heading="Edit Photo">
+              <div class="mt-4 text-center">
+                <app-photo-editor
+                  [member]="member"
+                  (memberChange)="OnMemberChange($event)"
+                ></app-photo-editor>
+              </div>
+            </tab>
+          </tabset>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+}

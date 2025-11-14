@@ -1,0 +1,96 @@
+<!-- member-detail.component.html -->
+<div class="min-vh-90 d-flex flex-column" style="overflow: hidden">
+  <!-- Top Section -->
+  <div class="container-fluid flex-grow-1 d-flex">
+    <div class="row flex-grow-1 w-100 g-0">
+      <!-- Left: Profile Section -->
+      <div
+        class="col-md-4 bg-primary text-white d-flex flex-column align-items-center justify-content-center p-5"
+      >
+        @if(member.photoUrl){
+        <img
+          [src]="member.photoUrl"
+          class="img-fluid rounded-circle shadow border border-3 border-white mb-4"
+          alt="{{ member.knownAs }}"
+          style="width: 200px; height: 200px"
+        />
+        } @else {
+        <img
+          src="https://static.vecteezy.com/system/resources/previews/005/544/753/non_2x/profile-icon-design-free-vector.jpg"
+          class="img-fluid rounded-circle shadow border border-3 border-white mb-4"
+          alt="{{ member.knownAs }}"
+          style="width: 200px; height: 200px"
+        />
+        }
+
+        <h2>{{ member.knownAs }}</h2>
+        <p><i class="bi bi-person-circle"></i> Age: {{ member.age }}</p>
+        <p>
+          <i
+            class="bi bi-gender-{{
+              member.gender === 'female' ? 'female' : 'male'
+            }}"
+          ></i>
+          {{ member.gender }}
+        </p>
+        <div class="mt-4 text-muted small">
+          <p><strong>Created:</strong> {{ member.created }}</p>
+          <p><strong>Last Active:</strong> {{ member.lastActive }}</p>
+        </div>
+      </div>
+
+      <!-- Right: Tabs and Info -->
+      <div class="col-md-8 d-flex flex-column p-5">
+        <tabset #memberTabs>
+          <tab heading="About" (selectTab)="onTabActivated($event)">
+            <p>{{ member.introduction }}</p>
+          </tab>
+          <tab heading="Looking For" (selectTab)="onTabActivated($event)">
+            <p>{{ member.lookingFor }}</p>
+          </tab>
+          <tab heading="Interests" (selectTab)="onTabActivated($event)">
+            <p>{{ member.interests }}</p>
+          </tab>
+          <tab
+            heading="Photos"
+            #phototab="tab"
+            (selectTab)="onTabActivated($event)"
+          >
+            @if(phototab.active){
+            <gallery
+              [items]="images"
+              class="gallery"
+              thumbPosition="left"
+            ></gallery>
+            }
+          </tab>
+          <tab heading="Location" (selectTab)="onTabActivated($event)">
+            <p>{{ member.city }}, {{ member.country }}</p>
+          </tab>
+          <tab heading="Messages" (selectTab)="onTabActivated($event)">
+            <app-member-message
+              [username]="member.userName"
+              [messages]="messages"
+              (updateMessage)="onUpdateMessages($event)"
+            ></app-member-message>
+          </tab>
+        </tabset>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer
+    class="bg-white py-3 px-4 border-top d-flex justify-content-end gap-3 shadow-sm"
+  >
+    <button class="btn btn-outline-danger btn-lg">
+      <i class="bi bi-heart-fill me-2"></i> Like
+    </button>
+    <button
+      class="btn btn-outline-success btn-lg"
+      (click)="selectTab('Messages')"
+    >
+      <i class="bi bi-chat-dots-fill me-2"></i> Message
+    </button>
+  </footer>
+</div>

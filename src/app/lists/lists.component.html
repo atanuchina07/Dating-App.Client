@@ -1,0 +1,59 @@
+<div class="text-center mt-4">
+  <h2 class="fw-bold text-primary">{{ getLike() }}</h2>
+</div>
+
+<div class="container mt-4">
+  <div class="d-flex justify-content-center mb-4">
+    <div class="btn-group" role="group" aria-label="Like Filter">
+      <button
+        class="btn btn-outline-primary px-4 py-2"
+        (click)="loadLikes()"
+        [(ngModel)]="predicate"
+        btnRadio="liked"
+      >
+        ❤️ Members I Like
+      </button>
+      <button
+        class="btn btn-outline-success px-4 py-2"
+        (click)="loadLikes()"
+        [(ngModel)]="predicate"
+        btnRadio="likedBy"
+      >
+        💖 Members Who Like Me
+      </button>
+      <button
+        class="btn btn-outline-info px-4 py-2"
+        (click)="loadLikes()"
+        [(ngModel)]="predicate"
+        btnRadio="mutual"
+      >
+        🤝 Mutual
+      </button>
+    </div>
+  </div>
+
+  <div class="row justify-content-center g-3">
+    @for(member of likesService.paginatedResult()?.items; track member.id) {
+    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+      <div class="card shadow-sm rounded-4 p-2 h-100" style="border: none">
+        <app-member-card [member]="member"></app-member-card>
+      </div>
+    </div>
+    }
+  </div>
+
+  <!-- Pagination part -->
+  @if(likesService.paginatedResult()?.pagination) {
+  <div class="d-flex justify-content-center">
+    <pagination
+      [totalItems]="(likesService.paginatedResult()?.pagination)!.totalItems"
+      [itemsPerPage]="
+        (likesService.paginatedResult()?.pagination)!.itemsPerPage
+      "
+      (pageChanged)="pageChanged($event)"
+      [(ngModel)]="(likesService.paginatedResult()?.pagination)!.currentPage"
+      [maxSize]="10"
+    ></pagination>
+  </div>
+  }
+</div>

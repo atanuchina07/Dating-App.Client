@@ -1,0 +1,108 @@
+<div class="row">
+  <div class="text-center mt-4 mb-3">
+    <h2 class="fw-bold text-primary">
+      Your matches -
+      {{ memberService.paginatedResult()?.pagination?.totalItems }}
+    </h2>
+  </div>
+
+  <div class="container">
+    <form
+      #form="ngForm"
+      (ngSubmit)="loadMembers()"
+      class="row align-items-end gy-2 gx-3 mb-4"
+    >
+      <div class="col-auto">
+        <label class="form-label">Age From:</label>
+        <input
+          type="number"
+          class="form-control"
+          name="minAge"
+          [(ngModel)]="userparams.minAge"
+          style="width: 100px"
+        />
+      </div>
+      <div class="col-auto">
+        <label class="form-label">Age To:</label>
+        <input
+          type="number"
+          class="form-control"
+          name="maxAge"
+          [(ngModel)]="userparams.maxAge"
+          style="width: 100px"
+        />
+      </div>
+      <div class="col-auto">
+        <label class="form-label">Gender:</label>
+        <select
+          class="form-select"
+          name="gender"
+          [(ngModel)]="userparams.gender"
+          style="width: 120px"
+        >
+          @for(gender of genderList; track gender.value) {
+          <option [value]="gender.value">{{ gender.display }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="col-auto">
+        <button type="submit" class="btn btn-primary">Apply Filter</button>
+      </div>
+      <div class="col-auto">
+        <button type="button" (click)="resetFilters()" class="btn btn-info">
+          Reset Filter
+        </button>
+      </div>
+
+      <div class="col-auto ms-auto">
+        <div class="btn-group">
+          <button
+            class="btn btn-outline-primary"
+            name="orderBy"
+            type="button"
+            (click)="loadMembers()"
+            [(ngModel)]="userparams.orderBy"
+            btnRadio="lastActive"
+          >
+            Last Active
+          </button>
+          <button
+            class="btn btn-outline-primary"
+            name="orderBy"
+            type="button"
+            (click)="loadMembers()"
+            [(ngModel)]="userparams.orderBy"
+            btnRadio="created"
+          >
+            Newest Members
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="row justify-content-center g-4">
+    @for(member of memberService.paginatedResult()?.items; track member.id) {
+    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+      <div class="card h-100 shadow-sm rounded-3" style="border: none">
+        <app-member-card [member]="member"></app-member-card>
+      </div>
+    </div>
+    }
+  </div>
+
+  @if (memberService.paginatedResult()?.pagination) {
+  <div class="d-flex justify-content-center mt-4">
+    <pagination
+      [totalItems]="(memberService.paginatedResult()?.pagination)!.totalItems"
+      [itemsPerPage]="
+        (memberService.paginatedResult()?.pagination)!.itemsPerPage
+      "
+      (pageChanged)="pagedChanged($event)"
+      [(ngModel)]="(memberService.paginatedResult()?.pagination)!.currentPage"
+      [maxSize]="10"
+    ></pagination>
+  </div>
+  }
+</div>
